@@ -111,6 +111,11 @@ var gl;
 var program 
 var normalMatrix, normalMatrixLoc;
 
+var scaleFactor = .1;
+var powerLevel = 1;
+var mouseX = 0;
+var mouseY = 0;
+
 
 function main() {
   // Get A WebGL context
@@ -122,6 +127,8 @@ function main() {
     webglLessonsHelper.showNeedWebGL(canvas);
     return;
   }
+    document.onmousemove = handleMouseMove;
+	document.onclick = handleMouseClick;
 
   // look up the text canvas.
   var textCanvas = document.getElementById("text");
@@ -176,6 +183,8 @@ function main() {
     var deltaTime = clock - then;
     // Remember the current time for the next frame.
     then = clock;
+	
+	powerLevel += deltaTime;
 
     // Every frame increase the rotation a little.
 
@@ -204,7 +213,6 @@ function main() {
 		var inputVertices = [
 			0,1,1, 1,1,1, 1,1,0,
 			0,1,1, 0,1,0, 1,1,0,
-
 			0,1,1, 0,1,0, 0,0,1,
 			0,1,1, 0,1,0, 0,0,0,
 			1,1,0, 0,1,0, 0,0,0,
@@ -220,10 +228,15 @@ function main() {
 		var vertices = [];
 		var surfaceNormals = [];
 		
+		var scalar = scaleFactor * powerLevel;
+		
 		for(var i = 0; i < inputVertices.length; i = i + 9){
-			var a = new vec3(inputVertices[i+0],inputVertices[i+1],inputVertices[i+2]);
-			var b = new vec3(inputVertices[i+3],inputVertices[i+4],inputVertices[i+5]);
-			var c = new vec3(inputVertices[i+6],inputVertices[i+7],inputVertices[i+8]);
+			
+		
+			var a = new vec3(((inputVertices[i+0]) + mouseX)*scalar,(inputVertices[i+1] + mouseY) * scalar,(inputVertices[i+2]) * scalar);
+			var b = new vec3(((inputVertices[i+3]) + mouseX)*scalar,(inputVertices[i+4] + mouseY) * scalar,(inputVertices[i+5]) * scalar);
+			var c = new vec3(((inputVertices[i+6]) + mouseX)*scalar,(inputVertices[i+7] + mouseY) * scalar,(inputVertices[i+8]) * scalar);
+
 			
 			var vectorA = subtract(b,a);
 			var vectorB = subtract(c,a);
@@ -405,7 +418,21 @@ function main() {
 		gl.drawArrays( gl.TRIANGLES, 0, points );
 	}
 }
-  
+function handleMouseMove(event) {
+    var rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left,
+	mouseX = mouseX /480;
+    mouseY = event.clientY - rect.top
+	mouseY = mouseY /800;
+	alert(mouseX + " " + mouseY);
+
+}
+
+
+function handleMouseClick(event) {
+    powerLevel = 1;
+
+}  
 
 
 main();
