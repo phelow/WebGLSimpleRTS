@@ -211,18 +211,18 @@ function main() {
 		// Four Vertices
 		
 		var inputVertices = [
-			0,1,1, 1,1,1, 1,1,0,
-			0,1,1, 0,1,0, 1,1,0,
-			0,1,1, 0,1,0, 0,0,1,
-			0,1,1, 0,1,0, 0,0,0,
-			1,1,0, 0,1,0, 0,0,0,
-			1,1,0, 1,0,0, 0,0,0,
-			1,1,0, 1,0,0, 1,0,1,
-			1,1,0, 1,1,1, 1,0,1,
-			1,1,0, 0,0,1, 1,0,1,
-			0,1,1, 0,0,1, 1,1,1,
-			0,0,0, 0,0,1, 1,0,0,
-			0,0,1, 1,0,1, 1,0,0,
+			1,2,2, 2,2,2, 2,2,1,
+			1,2,2, 1,2,1, 2,2,1,
+			1,2,2, 1,2,1, 1,1,2,
+			1,2,2, 1,2,1, 1,1,1,
+			2,2,1, 1,2,1, 1,1,1,
+			2,2,1, 2,1,1, 1,1,1,
+			2,2,1, 2,1,1, 2,1,2,
+			2,2,1, 2,2,2, 2,1,2,
+			2,2,1, 1,1,2, 2,1,2,
+			1,2,2, 1,1,2, 2,2,2,
+			1,1,1, 1,1,2, 2,1,1,
+			1,1,2, 2,1,2, 2,1,1,
 		];
 		
 		var vertices = [];
@@ -233,9 +233,9 @@ function main() {
 		for(var i = 0; i < inputVertices.length; i = i + 9){
 			
 			
-			var a = new vec3(((inputVertices[i+0]))*scalar + mouseX,-(inputVertices[i+1] - mouseY) * scalar,(inputVertices[i+2]) * scalar);
-			var b = new vec3(((inputVertices[i+3]))*scalar + mouseX,-(inputVertices[i+4] - mouseY) * scalar,(inputVertices[i+5]) * scalar);
-			var c = new vec3(((inputVertices[i+6]))*scalar + mouseX,(inputVertices[i+7] + mouseY) * scalar,(inputVertices[i+8]) * scalar);
+			var a = new vec3(((inputVertices[i+0])*mouseX)*scalar,(inputVertices[i+1]*mouseY) * scalar,(inputVertices[i+2]) * scalar);
+			var b = new vec3(((inputVertices[i+3])*mouseX)*scalar,(inputVertices[i+4]*mouseY) * scalar,(inputVertices[i+5]) * scalar);
+			var c = new vec3(((inputVertices[i+6])*mouseX)*scalar,(inputVertices[i+7]*mouseY) * scalar,(inputVertices[i+8]) * scalar);
 
 			
 			var vectorA = subtract(b,a);
@@ -420,9 +420,9 @@ function main() {
 }
 function handleMouseMove(event) {
     var rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX + rect.left,
+    mouseX = event.clientX - rect.left/2,
 	mouseX = -1 + mouseX*4 /800;
-    mouseY = -event.clientY + rect.top;
+    mouseY = -event.clientY - rect.top/2;
 	mouseY =1+ mouseY * 4 /480;
 	alert(mouseX + " " + mouseY);
 
