@@ -2,7 +2,7 @@
 <!-- saved from url=(0064)http://webglfundamentals.org/webgl/webgl-text-html-canvas2d.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<link type="text/css" href="./WebGL Text - HTML Canvas2D_files/webgl-tutorials.css" rel="stylesheet">
+<link type="text/css" href="./resources/webgl-tutorials.css" rel="stylesheet">
 <style>
 * {
   box-sizing: border-box;
@@ -25,6 +25,9 @@
 
 </style>
 <script src="./resources/webgl-utils.js.download"></script>
+<script type="text/javascript" src="./resources/webgl-utils.js"></script>
+<script type="text/javascript" src="./resources/initShaders.js"></script>
+<script type="text/javascript" src="./resources/MV.js"></script>
 <script src="./resources/webgl-lessons-helper.js.download"></script>
 <script src="./resources/3d-math.js.download"></script>
 </head>
@@ -60,12 +63,44 @@ void main() {
    gl_FragColor = v_color;
 }
 </script>
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+attribute  vec4 vNormal;
+
+uniform mat4 rotationMatrix;
+uniform mat3 normalMatrix;
+
+varying lowp vec4 vColor;
+
+void
+main()
+{
+    gl_Position = vPosition * rotationMatrix;
+    vColor = vec4 (vNormal.x, vNormal.y, vNormal.z,1.0);
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+varying lowp vec4 vColor;
+precision mediump float;
+
+
+void
+main()
+{
+    gl_FragColor = vColor;
+}
+</script>
+
 <script>
 "use strict";
 
  var latitudeBands = 30;
  var longitudeBands = 30;
  var radius = 2;
+var points;
  
  var vertexPositionBuffer;
  var vertexNormalBuffer;
@@ -73,6 +108,9 @@ void main() {
  var vertexIndexBuffer;
 var canvas;
 var gl;
+var program 
+var normalMatrix, normalMatrixLoc;
+
 
 function main() {
   // Get A WebGL context
@@ -92,14 +130,14 @@ function main() {
   var ctx = textCanvas.getContext("2d");
 
   // setup GLSL program
-  var program = webglUtils.createProgramFromScripts(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+  var program2 = webglUtils.createProgramFromScripts(gl, ["3d-vertex-shader", "3d-fragment-shader"]);
 
   // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
-  var colorLocation = gl.getAttribLocation(program, "a_color");
+  var positionLocation = gl.getAttribLocation(program2, "a_position");
+  var colorLocation = gl.getAttribLocation(program2, "a_color");
 
   // lookup uniforms
-  var matrixLocation = gl.getUniformLocation(program, "u_matrix");
+  var matrixLocation = gl.getUniformLocation(program2, "u_matrix");
 
   // Create a buffer to put positions in
   var positionBuffer = gl.createBuffer();
@@ -146,7 +184,7 @@ function main() {
 	
     // Clear the 2D canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	ctx.font = "50px serif";
+	ctx.font = "20px serif";
 	ctx.textAlign = "center";
 	
 	ctx.fillText("Tap or click to place a node.", canvas.width/2,canvas.height *7/8);
@@ -218,7 +256,7 @@ function main() {
 		//  Configure WebGL
 		//
 		gl.viewport( 0, 0, canvas.width, canvas.height );
-		gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
+		gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
 		
 		//  Load shaders and initialize attribute buffers
 		
@@ -261,9 +299,9 @@ function main() {
 	function setRotation(){
 		
 		
-		var x = document.getElementById("xSlider").value * 360/100;
-		var y = document.getElementById("ySlider").value * 360/100;
-		var z = document.getElementById("zSlider").value * 360/100;
+		var x = 0;//document.getElementById("xSlider").value * 360/100;
+		var y = 0;//document.getElementById("ySlider").value * 360/100;
+		var z = 0;//document.getElementById("zSlider").value * 360/100;
 		
 		
 		matrix = [
@@ -351,6 +389,20 @@ function main() {
 		 0, 		0, 1, 0,
 		 0, 		0, 0, 1,
 	  ];
+	}
+	
+	
+	function render() {
+
+		normalMatrix = [
+			vec3(matrix[0], matrix[1], matrix[2]),
+			vec3(matrix[3], matrix[4], matrix[5]),
+			vec3(matrix[6], matrix[7], matrix[8])
+		];
+		
+		gl.uniformMatrix3fv(normalMatrixLoc, false, flatten(normalMatrix) );
+		gl.clear( gl.COLOR_BUFFER_BIT );
+		gl.drawArrays( gl.TRIANGLES, 0, points );
 	}
 }
   
