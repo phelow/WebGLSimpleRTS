@@ -210,32 +210,32 @@ function main() {
 		
 		// Four Vertices
 		
+		
+		var scalar = scaleFactor * powerLevel;
 		var inputVertices = [
-			1,2,2, 2,2,2, 2,2,1,
-			1,2,2, 1,2,1, 2,2,1,
-			1,2,2, 1,2,1, 1,1,2,
-			1,2,2, 1,2,1, 1,1,1,
-			2,2,1, 1,2,1, 1,1,1,
-			2,2,1, 2,1,1, 1,1,1,
-			2,2,1, 2,1,1, 2,1,2,
-			2,2,1, 2,2,2, 2,1,2,
-			2,2,1, 1,1,2, 2,1,2,
-			1,2,2, 1,1,2, 2,2,2,
-			1,1,1, 1,1,2, 2,1,1,
-			1,1,2, 2,1,2, 2,1,1,
+			mouseX,	mouseY+.1*scalar,.1*scalar,			mouseX+.1*scalar,mouseY+.1*scalar,.1*scalar, 			mouseX+.1*scalar,mouseY+.1*scalar,0,
+			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+.1*scalar,mouseY+.1*scalar,0,
+			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+0,mouseY+0,.1*scalar,
+			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+0,mouseY+0,0,
+			mouseX+.1*scalar,mouseY+.1*scalar,0, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+0,mouseY+0,0,
+			mouseX+.1*scalar,mouseY+.1*scalar,0, 		mouseX+.1*scalar,mouseY+0,0, 							mouseX+0,mouseY+0,0,
+			mouseX+.1*scalar,mouseY+.1*scalar,0,		mouseX+.1*scalar,mouseY+0,0, 							mouseX+.1*scalar,mouseY+0,.1*scalar,
+			mouseX+.1*scalar,mouseY+.1*scalar,0, 		mouseX+.1*scalar,mouseY+.1*scalar,.1*scalar, 			mouseX+.1*scalar,mouseY+0,.1*scalar,
+			mouseX+.1*scalar,mouseY+.1*scalar,0, 		mouseX+0,mouseY+0,.1*scalar, 							mouseX+.1*scalar,mouseY+0,.1*scalar,
+			mouseX,mouseY+.1*scalar,.1*scalar,			mouseX+0,mouseY+0,.1*scalar, 							mouseX+.1*scalar,mouseY+.1*scalar,.1*scalar,
+			mouseX,mouseY+0,0, 							mouseX+0,mouseY+0,.1*scalar, 							mouseX+.1*scalar,mouseY+0,0,
+			mouseX,mouseY+0,.1*scalar, 					mouseX+.1*scalar,mouseY+0,.1*scalar, 					mouseX+.1*scalar,mouseY+0,0
 		];
 		
 		var vertices = [];
 		var surfaceNormals = [];
 		
-		var scalar = scaleFactor * powerLevel;
-		
 		for(var i = 0; i < inputVertices.length; i = i + 9){
 			
-			
-			var a = new vec3(((inputVertices[i+0])*mouseX)*scalar,(inputVertices[i+1]*mouseY) * scalar,(inputVertices[i+2]) * scalar);
-			var b = new vec3(((inputVertices[i+3])*mouseX)*scalar,(inputVertices[i+4]*mouseY) * scalar,(inputVertices[i+5]) * scalar);
-			var c = new vec3(((inputVertices[i+6])*mouseX)*scalar,(inputVertices[i+7]*mouseY) * scalar,(inputVertices[i+8]) * scalar);
+			scalar = 1;
+			var a = new vec3((inputVertices[i+0]),inputVertices[i+1],(inputVertices[i+2]));
+			var b = new vec3((inputVertices[i+3]),inputVertices[i+4],(inputVertices[i+5]));
+			var c = new vec3((inputVertices[i+6]),inputVertices[i+7],(inputVertices[i+8]));
 
 			
 			var vectorA = subtract(b,a);
@@ -423,7 +423,7 @@ function handleMouseMove(event) {
     mouseX = event.clientX - rect.left/2,
 	mouseX = -1 + mouseX*4 /800;
     mouseY = -event.clientY - rect.top/2;
-	mouseY =1+ mouseY * 4 /480;
+	mouseY =1+ mouseY * 4 /600;
 	alert(mouseX + " " + mouseY);
 
 }
