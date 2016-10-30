@@ -53,6 +53,35 @@ void main() {
 }
 </script>
 <!-- fragment shader -->
+<script id="3d-fragment-shader-resource-generators" type="x-shader/x-fragment">
+precision mediump float;
+
+// Passed in from the vertex shader.
+varying vec4 v_color;
+
+void main() {
+   gl_FragColor = v_color;
+}
+</script>
+
+
+<script id="vertex-shader-resource-generators" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+attribute  vec4 vNormal;
+
+uniform mat4 rotationMatrix;
+uniform mat3 normalMatrix;
+
+varying lowp vec4 vColor;
+
+void
+main()
+{
+    gl_Position = vPosition * rotationMatrix;
+    vColor = vec4 ( vNormal.z, vNormal.x, vNormal.y,.5);
+}
+</script>
+<!-- fragment shader -->
 <script id="3d-fragment-shader" type="x-shader/x-fragment">
 precision mediump float;
 
@@ -193,15 +222,16 @@ function main() {
 	
 	ctx.fillText("Tap or click to place a node.", canvas.width/2,canvas.height *7/8);
 
-	thing();
+	StartGame();
 	
 	
     requestAnimationFrame(drawScene);
+	
   }
   
 	
 	
-	function thing(){
+	function StartGame(){
 
 		
 		// Four Vertices
@@ -427,7 +457,6 @@ function handleMouseMove(event) {
 	mouseX = -.985+ mouseX*4 /800;
     mouseY = -event.clientY - rect.top/2;
 	mouseY = 1.15+ mouseY * 4 /600;
-	alert(mouseX + " " + mouseY);
 
 }
 
