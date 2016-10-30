@@ -97,18 +97,10 @@ main()
 <script>
 "use strict";
 
- var latitudeBands = 30;
- var longitudeBands = 30;
- var radius = 2;
 var points;
- 
- var vertexPositionBuffer;
- var vertexNormalBuffer;
- var vertexTextureCoordBuffer;
- var vertexIndexBuffer;
 var canvas;
 var gl;
-var program 
+var program;
 var normalMatrix, normalMatrixLoc;
 
 var scaleFactor = .1;
@@ -116,8 +108,8 @@ var powerLevel = 1;
 var mouseX = 0;
 var mouseY = 0;
 
-var placedVertices = [[]];
-var inputVertices = [];
+var placedFactories = [[]];
+var inputFactory = [];
 
 
 function main() {
@@ -216,7 +208,7 @@ function main() {
 		
 		
 		var scalar = scaleFactor * powerLevel;
-		inputVertices = [
+		inputFactory = [
 			mouseX,	mouseY+.1*scalar,.1*scalar,			mouseX+.1*scalar,mouseY+.1*scalar,.1*scalar, 			mouseX+.1*scalar,mouseY+.1*scalar,0,
 			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+.1*scalar,mouseY+.1*scalar,0,
 			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+0,mouseY+0,.1*scalar,
@@ -234,11 +226,11 @@ function main() {
 		var vertices = [];
 		var surfaceNormals = [];
 		
-		for(let v of placedVertices){
+		for(let v of placedFactories){
 			processVertices(v);
 		}
 		
-		processVertices(inputVertices);
+		processVertices(inputFactory);
 
 		
 		points = vertices.length;
@@ -432,9 +424,9 @@ function main() {
 function handleMouseMove(event) {
     var rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left/2,
-	mouseX = -1 + mouseX*4 /800;
+	mouseX = -.985+ mouseX*4 /800;
     mouseY = -event.clientY - rect.top/2;
-	mouseY =1+ mouseY * 4 /600;
+	mouseY = 1.15+ mouseY * 4 /600;
 	alert(mouseX + " " + mouseY);
 
 }
@@ -442,7 +434,7 @@ function handleMouseMove(event) {
 
 function handleMouseClick(event) {
     powerLevel = 1;
-	placedVertices.push(inputVertices);
+	placedFactories.push(inputFactory);
 }  
 
 
