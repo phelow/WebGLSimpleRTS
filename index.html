@@ -130,6 +130,7 @@ var points;
 var canvas;
 var gl;
 var program;
+var program3;
 var normalMatrix, normalMatrixLoc;
 
 var scaleFactor = .1;
@@ -139,6 +140,7 @@ var mouseY = 0;
 
 var placedFactories = [[]];
 var inputFactory = [];
+var resourceGenerators = [[]];
 
 
 function main() {
@@ -196,7 +198,35 @@ function main() {
   var rotationSpeed = 1.2;
 
   var then = 0;
-
+	var scalar = 1;
+		for(var r = 0; r < 100; r++){
+			//pick a random point in 3d space within range
+			var x = getRandomArbitrary(-1,1);
+			var y = getRandomArbitrary(-1,1);
+			var z = getRandomArbitrary(-1,1);
+			
+			alert(x + " " + y + " " + z);
+			
+			var inputResource =[
+			x,	y+.1*scalar,z+.1*scalar,			x+.1*scalar,y+.1*scalar,z+.1*scalar, 			x+.1*scalar,y+.1*scalar,z+0,
+			x,	y+.1*scalar,z+.1*scalar, 		x+0,y+.1*scalar,z+0, 							x+.1*scalar,y+.1*scalar,z+0,
+			x,	y+.1*scalar,z+.1*scalar, 		x+0,y+.1*scalar,z+0, 							x+0,y+0,z+.1*scalar,
+			x,	y+.1*scalar,z+.1*scalar, 		x+0,y+.1*scalar,z+0, 							x+0,y+0,z+0,
+			x+.1*scalar,y+.1*scalar,z+0, 		x+0,y+.1*scalar,z+0, 							x+0,y+0,z+0,
+			x+.1*scalar,y+.1*scalar,z+0, 		x+.1*scalar,y+0,z+0, 							x+0,y+0,z+0,
+			x+.1*scalar,y+.1*scalar,z+0,		x+.1*scalar,y+0,z+0, 							x+.1*scalar,y+0,z+.1*scalar,
+			x+.1*scalar,y+.1*scalar,z+0, 		x+.1*scalar,y+.1*scalar,z+.1*scalar, 			x+.1*scalar,y+0,z+.1*scalar,
+			x+.1*scalar,y+.1*scalar,z+0, 		x+0,y+0,z+.1*scalar, 							x+.1*scalar,y+0,z+.1*scalar,
+			x,y+.1*scalar,z+.1*scalar,			x+0,y+0,z+.1*scalar, 							x+.1*scalar,y+.1*scalar,z+.1*scalar,
+			x,y+0,z+0, 							x+0,y+0,z+.1*scalar, 							x+.1*scalar,y+0,z+0,
+			x,y+0,z+.1*scalar, 					x+.1*scalar,y+0,z+.1*scalar, 					x+.1*scalar,y+0,z+0];
+			//place a resource generator centered at that point
+			
+			resourceGenerators.push(inputResource);
+		
+		}
+  
+  
   requestAnimationFrame(drawScene);
 
   // Draw the scene.
@@ -222,22 +252,25 @@ function main() {
 	
 	ctx.fillText("Tap or click to place a node.", canvas.width/2,canvas.height *7/8);
 
-	StartGame();
+	DrawFactories();
 	
 	
     requestAnimationFrame(drawScene);
 	
   }
   
+	function getRandomArbitrary(min, max) {
+	  return Math.random() * (max - min) + min;
+	}
 	
-	
-	function StartGame(){
+	function DrawFactories(){
 
 		
 		// Four Vertices
 		
-		
 		var scalar = scaleFactor * powerLevel;
+			
+		
 		inputFactory = [
 			mouseX,	mouseY+.1*scalar,.1*scalar,			mouseX+.1*scalar,mouseY+.1*scalar,.1*scalar, 			mouseX+.1*scalar,mouseY+.1*scalar,0,
 			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+.1*scalar,mouseY+.1*scalar,0,
@@ -263,6 +296,11 @@ function main() {
 		processVertices(inputFactory);
 
 		
+		for(let v of resourceGenerators){
+			processVertices(v);
+		}
+		
+		
 		points = vertices.length;
 		//
 		//  Configure WebGL
@@ -273,6 +311,7 @@ function main() {
 		//  Load shaders and initialize attribute buffers
 		
 		program = initShaders( gl, "vertex-shader", "fragment-shader" );
+		//program3 = initShaders(gl,"vertex-shader-resource-generators", "fragment-shader-resource-generators");
 		gl.useProgram( program );
 		
 		// Load the data into the GPU
