@@ -116,6 +116,9 @@ var powerLevel = 1;
 var mouseX = 0;
 var mouseY = 0;
 
+var placedVertices = [[]];
+var inputVertices = [];
+
 
 function main() {
   // Get A WebGL context
@@ -205,6 +208,7 @@ function main() {
   }
   
 	
+	
 	function thing(){
 
 		
@@ -212,7 +216,7 @@ function main() {
 		
 		
 		var scalar = scaleFactor * powerLevel;
-		var inputVertices = [
+		inputVertices = [
 			mouseX,	mouseY+.1*scalar,.1*scalar,			mouseX+.1*scalar,mouseY+.1*scalar,.1*scalar, 			mouseX+.1*scalar,mouseY+.1*scalar,0,
 			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+.1*scalar,mouseY+.1*scalar,0,
 			mouseX,	mouseY+.1*scalar,.1*scalar, 		mouseX+0,mouseY+.1*scalar,0, 							mouseX+0,mouseY+0,.1*scalar,
@@ -230,38 +234,11 @@ function main() {
 		var vertices = [];
 		var surfaceNormals = [];
 		
-		for(var i = 0; i < inputVertices.length; i = i + 9){
-			
-			scalar = 1;
-			var a = new vec3((inputVertices[i+0]),inputVertices[i+1],(inputVertices[i+2]));
-			var b = new vec3((inputVertices[i+3]),inputVertices[i+4],(inputVertices[i+5]));
-			var c = new vec3((inputVertices[i+6]),inputVertices[i+7],(inputVertices[i+8]));
-
-			
-			var vectorA = subtract(b,a);
-			var vectorB = subtract(c,a);
-			
-			
-			var normal = cross(vectorA,vectorB);
-			
-			normal[0] += .3;
-			normal[1] += .3;
-			normal[2] += .3;
-			
-			normal = normalize(normal);
-			normal[3] =  0;
-		
-			surfaceNormals.push(normal);
-			surfaceNormals.push(normal);
-			surfaceNormals.push(normal);//cross product of b-a and c-a
-			
-			//normalize vector
-			
-			vertices.push(a);
-			vertices.push(b);
-			vertices.push(c);
-			
+		for(let v of placedVertices){
+			processVertices(v);
 		}
+		
+		processVertices(inputVertices);
 
 		
 		points = vertices.length;
@@ -301,6 +278,40 @@ function main() {
 		
 		
 		render();
+		
+		function processVertices(vertexArray){
+			for(var i = 0; i < vertexArray.length; i = i + 9){
+				
+				var a = new vec3((vertexArray[i+0]),vertexArray[i+1],(vertexArray[i+2]));
+				var b = new vec3((vertexArray[i+3]),vertexArray[i+4],(vertexArray[i+5]));
+				var c = new vec3((vertexArray[i+6]),vertexArray[i+7],(vertexArray[i+8]));
+
+				
+				var vectorA = subtract(b,a);
+				var vectorB = subtract(c,a);
+				
+				
+				var normal = cross(vectorA,vectorB);
+				
+				normal[0] += .3;
+				normal[1] += .3;
+				normal[2] += .3;
+				
+				normal = normalize(normal);
+				normal[3] =  0;
+			
+				surfaceNormals.push(normal);
+				surfaceNormals.push(normal);
+				surfaceNormals.push(normal);//cross product of b-a and c-a
+				
+				//normalize vector
+				
+				vertices.push(a);
+				vertices.push(b);
+				vertices.push(c);
+				
+			}
+		}
 		
 	}
 
@@ -431,7 +442,7 @@ function handleMouseMove(event) {
 
 function handleMouseClick(event) {
     powerLevel = 1;
-
+	placedVertices.push(inputVertices);
 }  
 
 
