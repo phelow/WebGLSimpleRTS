@@ -13,7 +13,7 @@ var Transform = function(x,y,z,width,height, scalar, gl){
 					 0,0,z,0
 					 0,0,0,scalar];
 					 
-	var verticies = [
+	this.verticies = [
 			0,1,1,	1,1,1, 	1,1,0,
 			0,1,1, 	0,1,0, 	1,1,0,
 			0,1,1, 	0,1,0, 	0,0,1,
@@ -27,9 +27,9 @@ var Transform = function(x,y,z,width,height, scalar, gl){
 			0,0,0, 	0,0,1, 	1,0,0,
 			0,0,1, 	1,0,1,	1,0,0];
 			
-	var bufferId = this.gl.createBuffer();
-	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, bufferId );
-	this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(vertices), this.gl.STATIC_DRAW );
+	this.buffer = this.gl.createBuffer();
+	this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
+	this.gl.bufferData( this.gl.ARRAY_BUFFER, flatten(this.vertices), this.gl.STATIC_DRAW );
 	
 	this.Translate = function(x,y,z){
 		var tmat = translate(x,y,z);
@@ -55,6 +55,7 @@ var Transform = function(x,y,z,width,height, scalar, gl){
 		gl.useProgram( this.program );
 		var position = this.gl.getUniformLocation(this.program,"Position");
 		this.gl.uniformMatrix4fv(position,false,this.matrix);
-		
+		this.gl.bindBuffer( this.gl.ARRAY_BUFFER, this.buffer );
+		gl.drawArrays( gl.TRIANGLES, 0,this.vertices.length );
 	}
 }
