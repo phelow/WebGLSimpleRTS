@@ -14,6 +14,8 @@ Math.randomRange = function(min,max){
 "use strict";
 
 function main() {
+	alert("Program starting");
+	
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
   var canvas = document.getElementById("canvas");
@@ -26,6 +28,9 @@ function main() {
     webglLessonsHelper.showNeedWebGL(canvas);
     return;
   }
+    document.onmousemove = handleMouseMove;
+	document.onclick = handleMouseClick;
+
 
 
 
@@ -76,7 +81,7 @@ function main() {
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-
+	this.viewport = [0, 0, gl.canvas.width, gl.canvas.height];
     gl.enable(gl.CULL_FACE);
     gl.enable(gl.DEPTH_TEST);
 
@@ -89,23 +94,153 @@ function main() {
         m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
     // Compute the camera's matrix using look at.
-    var cameraPosition = [0, 0, 100];
-    var target = [0, 0, 0];
-    var up = [0, 1, 0];
-    var cameraMatrix = m4.lookAt(cameraPosition, target, up);
+    this.cameraPosition = [0, 0, 100];
+    this.target = [0, 0, 0];
+    this.up = [0, 1, 0];
+    var cameraMatrix = m4.lookAt(this.cameraPosition, this.target, this.up);
 
     // Make a view matrix from the camera matrix.
-    var viewMatrix = m4.inverse(cameraMatrix);
+    this.viewMatrix = m4.inverse(cameraMatrix);
 
-    var viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
+    this.viewProjectionMatrix = m4.multiply(projectionMatrix, this.viewMatrix);
 
     // ------ Draw the objects --------
 
 	for(var i = 0; i < obj.length; i++){
-		obj[i].draw(viewProjectionMatrix);
+		obj[i].draw(this.viewProjectionMatrix);
 	}
     requestAnimationFrame(drawScene);
   }
+  
+  function unproject(windowX,windowY,windowZ, out){
+	  windowX = parseFloat(windowX);
+	  windowY = parseFloat(windowY);
+	  windowZ = parseFloat(windowZ);
+	  var model = this.viewMatrix;
+	  alert(model);
+	  var proj = this.viewProjectionMatrix;
+	  var view = this.viewport;
+	  var objPos = [];
+	  var inp = [
+		windowX,
+		windowY,
+		windowZ,
+		1.0
+	  ];
+	  
+	  var finalMatrix = [];
+	  finalMatrix = multMatrices(model,proj,finalMatrix);
+	  
+	  finalMatrix = invertMatrix(finalMatrix,finalMatrix);
+	  
+	  
+        inp[0] = (inp[0] - view[0]) / view[2];
+        inp[1] = (inp[1] - view[1]) / view[3];
+	  
+	  
+        inp[0] = inp[0] * 2 - 1;
+        inp[1] = inp[1] * 2 - 1;
+        inp[2] = inp[2] * 2 - 1;
+		
+		
+        var out = [];
+		
+		out = multMatrixVec(finalMatrix, inp, out);
+        if (out[3] === 0.0) {
+            return out;
+        }
+
+        out[0] /= out[3];
+        out[1] /= out[3];
+        out[2] /= out[3];
+
+        return out;
+	  
+  }
+  
+  function multMatrices (a, b, r) {
+        for (var i = 0; i < 4; i = i + 1) {
+            for (var j = 0; j < 4; j = j + 1) {
+                r[i * 4 + j] =
+                    a[i * 4 + 0] * b[0 * 4 + j] +
+                    a[i * 4 + 1] * b[1 * 4 + j] +
+                    a[i * 4 + 2] * b[2 * 4 + j] +
+                    a[i * 4 + 3] * b[3 * 4 + j];
+            }
+        }
+		
+		return r;
+    }
+	
+	function invertMatrix(m, invOut) {
+        /** @type {Array.<number>} */
+        var inv = [];
+
+        inv[0] = m[5] * m[10] * m[15] - m[5] * m[11] * m[14] - m[9] * m[6] * m[15] +
+            m[9] * m[7] * m[14] + m[13] * m[6] * m[11] - m[13] * m[7] * m[10];
+        inv[4] = -m[4] * m[10] * m[15] + m[4] * m[11] * m[14] + m[8] * m[6] * m[15] -
+            m[8] * m[7] * m[14] - m[12] * m[6] * m[11] + m[12] * m[7] * m[10];
+        inv[8] = m[4] * m[9] * m[15] - m[4] * m[11] * m[13] - m[8] * m[5] * m[15] +
+            m[8] * m[7] * m[13] + m[12] * m[5] * m[11] - m[12] * m[7] * m[9];
+        inv[12] = -m[4] * m[9] * m[14] + m[4] * m[10] * m[13] + m[8] * m[5] * m[14] -
+            m[8] * m[6] * m[13] - m[12] * m[5] * m[10] + m[12] * m[6] * m[9];
+        inv[1] = -m[1] * m[10] * m[15] + m[1] * m[11] * m[14] + m[9] * m[2] * m[15] -
+            m[9] * m[3] * m[14] - m[13] * m[2] * m[11] + m[13] * m[3] * m[10];
+        inv[5] = m[0] * m[10] * m[15] - m[0] * m[11] * m[14] - m[8] * m[2] * m[15] +
+            m[8] * m[3] * m[14] + m[12] * m[2] * m[11] - m[12] * m[3] * m[10];
+        inv[9] = -m[0] * m[9] * m[15] + m[0] * m[11] * m[13] + m[8] * m[1] * m[15] -
+            m[8] * m[3] * m[13] - m[12] * m[1] * m[11] + m[12] * m[3] * m[9];
+        inv[13] = m[0] * m[9] * m[14] - m[0] * m[10] * m[13] - m[8] * m[1] * m[14] +
+            m[8] * m[2] * m[13] + m[12] * m[1] * m[10] - m[12] * m[2] * m[9];
+        inv[2] = m[1] * m[6] * m[15] - m[1] * m[7] * m[14] - m[5] * m[2] * m[15] +
+            m[5] * m[3] * m[14] + m[13] * m[2] * m[7] - m[13] * m[3] * m[6];
+        inv[6] = -m[0] * m[6] * m[15] + m[0] * m[7] * m[14] + m[4] * m[2] * m[15] -
+            m[4] * m[3] * m[14] - m[12] * m[2] * m[7] + m[12] * m[3] * m[6];
+        inv[10] = m[0] * m[5] * m[15] - m[0] * m[7] * m[13] - m[4] * m[1] * m[15] +
+            m[4] * m[3] * m[13] + m[12] * m[1] * m[7] - m[12] * m[3] * m[5];
+        inv[14] = -m[0] * m[5] * m[14] + m[0] * m[6] * m[13] + m[4] * m[1] * m[14] -
+            m[4] * m[2] * m[13] - m[12] * m[1] * m[6] + m[12] * m[2] * m[5];
+        inv[3] = -m[1] * m[6] * m[11] + m[1] * m[7] * m[10] + m[5] * m[2] * m[11] -
+            m[5] * m[3] * m[10] - m[9] * m[2] * m[7] + m[9] * m[3] * m[6];
+        inv[7] = m[0] * m[6] * m[11] - m[0] * m[7] * m[10] - m[4] * m[2] * m[11] +
+            m[4] * m[3] * m[10] + m[8] * m[2] * m[7] - m[8] * m[3] * m[6];
+        inv[11] = -m[0] * m[5] * m[11] + m[0] * m[7] * m[9] + m[4] * m[1] * m[11] -
+            m[4] * m[3] * m[9] - m[8] * m[1] * m[7] + m[8] * m[3] * m[5];
+        inv[15] = m[0] * m[5] * m[10] - m[0] * m[6] * m[9] - m[4] * m[1] * m[10] +
+            m[4] * m[2] * m[9] + m[8] * m[1] * m[6] - m[8] * m[2] * m[5];
+
+        /** @type {number} */
+        var det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
+
+        det = 1.0 / det;
+
+        for (var i = 0; i < 16; i = i + 1) {
+            invOut[i] = inv[i] * det;
+        }
+
+        return invOut;
+    }
+	
+	function multMatrixVec(matrix, inp, out) {
+        for (var i = 0; i < 4; i = i + 1) {
+            out[i] =
+                inp[0] * matrix[0 * 4 + i] +
+                inp[1] * matrix[1 * 4 + i] +
+                inp[2] * matrix[2 * 4 + i] +
+                inp[3] * matrix[3 * 4 + i];
+        }
+		
+		return out;
+    }
+	function handleMouseMove(event) {
+		var out = [0,0,0,0];
+		out = unproject(event.clientX,event.clientY,-1,out);
+		alert(out[0] + " " + out[1] + " " + out[2]);
+	}
+
+
+	function handleMouseClick(event) {
+	}  
 }
 
 main();
