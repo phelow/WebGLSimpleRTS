@@ -15,7 +15,14 @@ Math.randomRange = function(min,max){
 
 var cursor;
 var obj;
+var cursorRot;
+var gl;
 
+  function makeNewCursor(){
+	cursor = new Transform(gl, 0,0,0);
+	cursor.scale([.1,.1,.1,.1]);
+	cursorRot = [Math.randomRange(-.1,.1),Math.randomRange(-.1,.1),Math.randomRange(-.1,.1)];
+  }
 function main() {
 	alert("Program starting");
 	
@@ -26,7 +33,7 @@ function main() {
   var ctx = textCanvas.getContext("2d");
   
   webglLessonsHelper.setupLesson(canvas);
-  var gl = canvas.getContext("webgl");
+  gl = canvas.getContext("webgl");
   if (!gl) {
     webglLessonsHelper.showNeedWebGL(canvas);
     return;
@@ -44,6 +51,8 @@ function main() {
   // setup GLSL program
   
 
+  
+  
   function degToRad(d) {
     return d * Math.PI / 180;
   }
@@ -56,8 +65,7 @@ function main() {
   var cubeTranslation   = [-40, 0, 0];
   var coneTranslation   = [ 40, 0, 0];
 */
-  cursor = new Transform(gl, 0,0,0);
-  
+  makeNewCursor();
   obj = [];
 	for(var i = 0; i < 10; i++){
 		obj.push(new Transform(gl, Math.randomRange(-30,30), Math.randomRange(-30,30),0));
@@ -72,6 +80,9 @@ function main() {
   // Draw the scene.
   function drawScene(time) {
     time *= 0.0005;
+	
+	cursor.scale([1.001,1.001,1.001]);
+	cursor.rotate(cursorRot);
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     webglUtils.resizeCanvasToDisplaySize(ctx.canvas);
@@ -118,7 +129,6 @@ function main() {
 	cursor.draw(this.viewProjectionMatrix);
     requestAnimationFrame(drawScene);
   }
-  
   function unproject(windowX,windowY,windowZ, out){
 	  windowX = parseFloat(windowX);
 	  windowY = parseFloat(windowY);
@@ -252,7 +262,7 @@ function main() {
 
 	function handleMouseClick(event) {
 		obj.push(cursor);
-		cursor = new Transform(gl, 0,0,0);
+		makeNewCursor();
 	}  
 }
 
