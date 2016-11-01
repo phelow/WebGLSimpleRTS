@@ -13,6 +13,8 @@ Math.randomRange = function(min,max){
 
 "use strict";
 
+var cursor;
+
 function main() {
 	alert("Program starting");
 	
@@ -53,6 +55,8 @@ function main() {
   var cubeTranslation   = [-40, 0, 0];
   var coneTranslation   = [ 40, 0, 0];
 */
+  cursor = new Transform(gl, Math.randomRange(-30,30), Math.randomRange(-30,30),0);
+  
   var obj = [];
 	for(var i = 0; i < 10; i++){
 		obj.push(new Transform(gl, Math.randomRange(-30,30), Math.randomRange(-30,30),0));
@@ -109,6 +113,8 @@ function main() {
 	for(var i = 0; i < obj.length; i++){
 		obj[i].draw(this.viewProjectionMatrix);
 	}
+  
+	cursor.draw(this.viewProjectionMatrix);
     requestAnimationFrame(drawScene);
   }
   
@@ -117,7 +123,6 @@ function main() {
 	  windowY = parseFloat(windowY);
 	  windowZ = parseFloat(windowZ);
 	  var model = this.viewMatrix;
-	  alert(model);
 	  var proj = this.viewProjectionMatrix;
 	  var view = this.viewport;
 	  var objPos = [];
@@ -232,10 +237,15 @@ function main() {
 		
 		return out;
     }
+	
 	function handleMouseMove(event) {
 		var out = [0,0,0,0];
 		out = unproject(event.clientX,event.clientY,-1,out);
-		alert(out[0] + " " + out[1] + " " + out[2]);
+		
+		var out2 = [out[0]*out[2],-out[1]*out[2],1];
+		alert(out2);
+  
+		cursor.setPosition(out2);
 	}
 
 

@@ -76,6 +76,14 @@ Transform = function(gl,x,y,z){
 			this.rot[i] += s[i];
 		}
 	}
+	this.setPosition = function(s){
+		if(s.length != 3){
+			console.warn("Error, translation argument should have length 3.");
+		}
+		for(var i = 0; i < this.pos.length; i++){
+			this.pos[i] = s[i];
+		}
+	}
 	this.translate = function(s){
 		if(s.length != 3){
 			console.warn("Error, translation argument should have length 3.");
