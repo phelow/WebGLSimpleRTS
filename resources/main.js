@@ -17,6 +17,9 @@ function main() {
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
   var canvas = document.getElementById("canvas");
+  var textCanvas = document.getElementById("text");
+  var ctx = textCanvas.getContext("2d");
+  
   webglLessonsHelper.setupLesson(canvas);
   var gl = canvas.getContext("webgl");
   if (!gl) {
@@ -61,6 +64,15 @@ function main() {
     time *= 0.0005;
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    webglUtils.resizeCanvasToDisplaySize(ctx.canvas);
+	
+    // Clear the 2D canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	ctx.font = "20px serif";
+	ctx.textAlign = "center";
+	
+	ctx.fillText("Tap or click to place a node.", canvas.width/2,canvas.height *7/8);
+
 
     // Tell WebGL how to convert from clip space to pixels
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
