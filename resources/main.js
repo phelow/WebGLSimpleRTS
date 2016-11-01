@@ -14,6 +14,7 @@ Math.randomRange = function(min,max){
 "use strict";
 
 var cursor;
+var obj;
 
 function main() {
 	alert("Program starting");
@@ -55,9 +56,9 @@ function main() {
   var cubeTranslation   = [-40, 0, 0];
   var coneTranslation   = [ 40, 0, 0];
 */
-  cursor = new Transform(gl, Math.randomRange(-30,30), Math.randomRange(-30,30),0);
+  cursor = new Transform(gl, 0,0,0);
   
-  var obj = [];
+  obj = [];
 	for(var i = 0; i < 10; i++){
 		obj.push(new Transform(gl, Math.randomRange(-30,30), Math.randomRange(-30,30),0));
 		//console.log(Math.randomRange(-1,1));
@@ -250,6 +251,8 @@ function main() {
 
 
 	function handleMouseClick(event) {
+		obj.push(cursor);
+		cursor = new Transform(gl, 0,0,0);
 	}  
 }
 
