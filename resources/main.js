@@ -19,8 +19,8 @@ var cursorRot;
 var gl;
 
   function makeNewCursor(){
-	cursor = new Transform(gl, 0,0,0);
-	cursor.scale([.1,.1,.1,.1]);
+	cursor = new Rigidbody(new Transform(gl, 0,0,0),1,.99);
+	cursor.m_transform.scale([.1,.1,.1,.1]);
 	cursorRot = [Math.randomRange(-.1,.1),Math.randomRange(-.1,.1),Math.randomRange(-.1,.1)];
   }
 function main() {
@@ -81,8 +81,8 @@ function main() {
   function drawScene(time) {
     time *= 0.0005;
 	
-	cursor.scale([1.01,1.01,1.01]);
-	cursor.rotate(cursorRot);
+	cursor.m_transform.scale([1.01,1.01,1.01]);
+	cursor.m_transform.rotate(cursorRot);
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     webglUtils.resizeCanvasToDisplaySize(ctx.canvas);
@@ -126,7 +126,7 @@ function main() {
 		obj[i].draw(this.viewProjectionMatrix);
 	}
   
-	cursor.draw(this.viewProjectionMatrix);
+	cursor.m_transform.draw(this.viewProjectionMatrix);
     requestAnimationFrame(drawScene);
   }
   function unproject(windowX,windowY,windowZ, out){
@@ -256,7 +256,7 @@ function main() {
 		var out2 = [out[0]*out[2]-2.5,-out[1]*out[2]+5,1];
 		alert(out2);
   
-		cursor.setPosition(out2);
+		cursor.m_transform.setPosition(out2);
 	}
 
 

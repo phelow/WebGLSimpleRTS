@@ -16,4 +16,8 @@ Rigidbody = function(transform,mass,friction){
 		this.delta[1] *= friction;
 		this.delta[2] *= friction;
 	}
+	
+	this.draw = function(viewProjectionMatrix){
+		this.m_transform.draw(viewProjectionMatrix);
+	}
 }
