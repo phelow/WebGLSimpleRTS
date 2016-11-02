@@ -15,13 +15,12 @@ Math.randomRange = function(min,max){
 
 var cursor;
 var obj;
-var cursorRot;
 var gl;
 
   function makeNewCursor(){
 	cursor = new Rigidbody(new Transform(gl, 0,0,0),1,.99);
 	cursor.m_transform.scale([.1,.1,.1,.1]);
-	cursorRot = [Math.randomRange(-.1,.1),Math.randomRange(-.1,.1),Math.randomRange(-.1,.1)];
+	cursor.addRotationalForce([Math.randomRange(-.1,.1),Math.randomRange(-.1,.1),Math.randomRange(-.1,.1)]);
   }
 function main() {
 	alert("Program starting");
@@ -38,8 +37,6 @@ function main() {
     webglLessonsHelper.showNeedWebGL(canvas);
     return;
   }
-    document.onmousemove = handleMouseMove;
-	document.onclick = handleMouseClick;
 
 
 
@@ -76,13 +73,17 @@ function main() {
 	}
 
   requestAnimationFrame(drawScene);
+    document.onmousemove = handleMouseMove;
+	document.onclick = handleMouseClick;
 
   // Draw the scene.
   function drawScene(time) {
     time *= 0.0005;
 	
+	//update the rigidbodies
+	cursor.update();
+	
 	cursor.m_transform.scale([1.01,1.01,1.01]);
-	cursor.m_transform.rotate(cursorRot);
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
     webglUtils.resizeCanvasToDisplaySize(ctx.canvas);
