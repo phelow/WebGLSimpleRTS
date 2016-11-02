@@ -81,7 +81,7 @@ function main() {
   function drawScene(time) {
     time *= 0.0005;
 	
-	cursor.scale([1.001,1.001,1.001]);
+	cursor.scale([1.01,1.01,1.01]);
 	cursor.rotate(cursorRot);
 
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
@@ -253,7 +253,7 @@ function main() {
 		var out = [0,0,0,0];
 		out = unproject(event.clientX,event.clientY,-1,out);
 		
-		var out2 = [out[0]*out[2],-out[1]*out[2],1];
+		var out2 = [out[0]*out[2]-2.5,-out[1]*out[2]+5,1];
 		alert(out2);
   
 		cursor.setPosition(out2);
