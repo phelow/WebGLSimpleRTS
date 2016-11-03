@@ -8,7 +8,6 @@ Unit = function(rigidbody, faction){
 	
 	this.simpleAI = function(){
 		//TODO: implement basic following ai
-		console.log(allUnits);
 		//pick a target
 		if(this.m_target == null){
 			for(var potentialTarget of allUnits){
@@ -25,16 +24,10 @@ Unit = function(rigidbody, faction){
 			}
 		}
 		if(this.m_target != null){
-		
-			console.log("m_target:" + this.m_target);
-			console.log("m_target.m_rigidbody:" + this.m_target.m_rigidbody);
-			console.log(this.m_target.m_rigidbody);
-			console.log("m_target.m_rigidbody.m_transform:" + this.m_target.m_rigidbody.m_transform);
-			console.log(this.m_target.m_rigidbody.m_transform);
-			console.log("m_target.m_rigidbody.m_transform.pos:" + this.m_target.m_rigidbody.m_transform.pos);
-			console.log(this.m_target.m_rigidbody.m_transform.pos + " " + this.m_rigidbody.m_transform.pos)
+			console.log(this.m_target.m_rigidbody.m_transform.pos + " " +this.m_rigidbody.m_transform.pos);
 			var forceDir = vectorSubtract(this.m_target.m_rigidbody.m_transform.pos,this.m_rigidbody.m_transform.pos);
-			//this.m_rigidbody.addForce
+			console.log(forceDir);
+			this.m_rigidbody.addForce(forceDir[0],forceDir[1],forceDir[2]);
 		}
 	}
 }
