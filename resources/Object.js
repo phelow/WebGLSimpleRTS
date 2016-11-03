@@ -1,4 +1,7 @@
 
+var vectorSubtract = function(vectorA, vectorB){
+	var vectorC = [vectorA[0]-vectorB[0],vectorA[1]-vectorB[1],vectorA[2]-vectorB[2]]
+}
 
   var createFlattenedVertices = function(gl, vertices) {
     return webglUtils.createBufferInfoFromArrays(

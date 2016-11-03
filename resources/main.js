@@ -252,8 +252,13 @@ function main() {
 
 
 	function handleMouseClick(event) {
-		playerUnits.push(new Unit(cursor,"player"));
+		var newUnit = new Unit(cursor,"player");
+		
+		playerUnits.push(newUnit);
 		makeNewCursor();
+		
+		allUnits.push(newUnit)
+		
 	}  
 }
 

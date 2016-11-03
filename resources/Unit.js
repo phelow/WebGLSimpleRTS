@@ -12,6 +12,10 @@ Unit = function(transform, faction){
 		//pick a target
 		if(this.m_target == null){
 			for(var potentialTarget of allUnits){
+				if(potentialTarget.m_faction == this.m_faction){
+					continue;
+				}
+				
 				if(this.m_target == null){
 					this.m_target = potentialTarget;
 				}
