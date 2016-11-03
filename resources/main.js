@@ -23,7 +23,7 @@ var gl;
 	cursor.addRotationalForce([Math.randomRange(-.1,.1),Math.randomRange(-.1,.1),Math.randomRange(-.1,.1)]);
   }
 function main() {
-	alert("Program starting");
+	//alert("Program starting");
 	
   // Get A WebGL context
   /** @type {HTMLCanvasElement} */
@@ -255,7 +255,7 @@ function main() {
 		out = unproject(event.clientX,event.clientY,-1,out);
 		
 		var out2 = [out[0]*out[2]-2.5,-out[1]*out[2]+5,1];
-		alert(out2);
+		//alert(out2);
   
 		cursor.m_transform.setPosition(out2);
 	}
