@@ -8,5 +8,18 @@ Unit = function(transform, faction){
 	
 	this.simpleAI = function(){
 		//TODO: implement basic following ai
+		
+		//pick a target
+		if(this.m_target == null){
+			for(var potentialTarget of allUnits){
+				if(this.m_target == null){
+					this.m_target = potentialTarget;
+				}
+				else if(getDistance(this.m_target, this.m_transform) < getDistance(potentialTarget,this.m_transform)){
+					this.m_target = potentialTarget;
+				}
+			}
+		}
+		
 	}
 }

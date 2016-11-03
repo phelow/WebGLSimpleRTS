@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 Math.randomRange = function(min,max){
 	return (Math.random() * (max-min) + min);
 }
@@ -15,6 +6,7 @@ Math.randomRange = function(min,max){
 
 var cursor;
 var obj;
+var playerUnits;
 var gl;
 
   function makeNewCursor(){
@@ -37,18 +29,6 @@ function main() {
     webglLessonsHelper.showNeedWebGL(canvas);
     return;
   }
-
-
-
-
-  //var sphereBufferInfo = createFlattenedVertices(gl, primitives.createSphereVertices(10, 12, 6));
-  //var cubeBufferInfo   = createFlattenedVertices(gl, primitives.createCubeVertices(20));
-  //var coneBufferInfo   = createFlattenedVertices(gl, primitives.createTruncatedConeVertices(10, 0, 20, 12, 1, true, false));
-
-  // setup GLSL program
-  
-
-  
   
   function degToRad(d) {
     return d * Math.PI / 180;
@@ -64,6 +44,7 @@ function main() {
 */
   makeNewCursor();
   obj = [];
+  playerUnits = [];
 	for(var i = 0; i < 10; i++){
 		obj.push(new Transform(gl, Math.randomRange(-30,30), Math.randomRange(-30,30),0));
 		//console.log(Math.randomRange(-1,1));
@@ -82,6 +63,9 @@ function main() {
 	
 	//update the rigidbodies
 	cursor.update();
+	for(var i = 0; i < playerUnits.length; i++){
+		playerUnits[i].simpleAI();
+	}
 	
 	cursor.m_transform.scale([1.01,1.01,1.01]);
 
@@ -126,10 +110,16 @@ function main() {
 	for(var i = 0; i < obj.length; i++){
 		obj[i].draw(this.viewProjectionMatrix);
 	}
+	
+	
+	for(var i = 0; i < playerUnits.length; i++){
+		playerUnits[i].m_transform.draw(this.viewProjectionMatrix);
+	}
   
 	cursor.m_transform.draw(this.viewProjectionMatrix);
     requestAnimationFrame(drawScene);
   }
+  
   function unproject(windowX,windowY,windowZ, out){
 	  windowX = parseFloat(windowX);
 	  windowY = parseFloat(windowY);
@@ -262,7 +252,7 @@ function main() {
 
 
 	function handleMouseClick(event) {
-		obj.push(cursor);
+		playerUnits.push(new Unit(cursor,"player"));
 		makeNewCursor();
 	}  
 }
