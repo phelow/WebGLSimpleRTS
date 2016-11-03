@@ -47,7 +47,7 @@ function main() {
   
   enemyUnits = [];
 	for(var i = 0; i < 10; i++){
-		var enemyUnit = new Unit(new Rigidbody(new Transform(gl, 0,0,0),1,.99),"enemy");
+		var enemyUnit = new Unit(new Rigidbody(new Transform(gl, 0,0,0),10000,.99),"enemy");
 		enemyUnit.m_rigidbody.m_transform.scale([.2,.2,.2]);
 		enemyUnits.push(enemyUnit);
 		allUnits.push(enemyUnit);
@@ -74,6 +74,7 @@ function main() {
 	cursor.update();
 	for(var i = 0; i < allUnits.length; i++){
 		allUnits[i].simpleAI();
+		allUnits[i].m_rigidbody.update();
 	}
 	
 	cursor.m_transform.scale([1.01,1.01,1.01]);
