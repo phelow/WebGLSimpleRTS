@@ -8,9 +8,12 @@ var cursor;
 var obj;
 var playerUnits;
 var gl;
+var numEnemiesToSpawn = 1;
+var numFriendliesToSpawn = 1;
+var globalFriction = .7;
 
 function makeNewCursor() {
-    cursor = new Rigidbody(new Transform(gl, 0, 0, 0), 1, .99);
+    cursor = new Rigidbody(new Transform(gl, 0, 0, 0), 1, globalFriction);
     cursor.m_transform.scale([.1, .1, .1, .1]);
     cursor.addRotationalForce([Math.randomRange(-.1, .1), Math.randomRange(-.1, .1), Math.randomRange(-.1, .1)]);
 }
@@ -46,15 +49,15 @@ function main() {
     obj = [];
 
     enemyUnits = [];
-    for (var i = 0; i < 10; i++) {
-        var enemyUnit = new Unit(new Rigidbody(new Transform(gl, 0, 0, 0), 10000, .99), "enemy");
+    for (var i = 0; i < numEnemiesToSpawn; i++) {
+        var enemyUnit = new Unit(new Rigidbody(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0), 10000, globalFriction), "enemy");
         enemyUnit.m_rigidbody.m_transform.scale([.2, .2, .2]);
         enemyUnits.push(enemyUnit);
         allUnits.push(enemyUnit);
     }
 
     playerUnits = [];
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < numFriendliesToSpawn; i++) {
         obj.push(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0));
         //console.log(Math.randomRange(-1,1));
         //obj.push(new Transform(gl, -1.5,1.5,0));
@@ -122,8 +125,8 @@ function main() {
         }
 
 
-        for (var i = 0; i < playerUnits.length; i++) {
-            playerUnits[i].m_rigidbody.m_transform.draw(this.viewProjectionMatrix);
+        for (var i = 0; i < allUnits.length; i++) {
+            allUnits[i].m_rigidbody.m_transform.draw(this.viewProjectionMatrix);
         }
 
         cursor.m_transform.draw(this.viewProjectionMatrix);

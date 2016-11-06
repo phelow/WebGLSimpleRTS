@@ -4,7 +4,7 @@ Unit = function (rigidbody, faction) {
     this.m_faction = faction;
     this.m_rigidbody = rigidbody;
     this.m_target = null;
-    this.m_forceMultiplier = 10.0;
+    this.m_forceMultiplier = 1000.0;
 
     console.log("unit created, rigidbody:" + this.m_rigidbody);
 
@@ -16,7 +16,6 @@ Unit = function (rigidbody, faction) {
                 if (potentialTarget.m_faction == this.m_faction) {
                     continue;
                 }
-
                 if (this.m_target == null) {
                     this.m_target = potentialTarget;
                 }
@@ -25,8 +24,7 @@ Unit = function (rigidbody, faction) {
                 }
             }
         }
-        if (this.m_target != null) {
-            console.log(this.m_target.m_rigidbody.m_transform.pos + " " + this.m_rigidbody.m_transform.pos);
+        if (this.m_target != null) { //TODO: fix the bug where we're getting a vector to the origin.
             var forceDir = vectorSubtract(this.m_target.m_rigidbody.m_transform.pos, this.m_rigidbody.m_transform.pos);
             console.log(forceDir);
             forceDir = normalize(forceDir);
@@ -34,7 +32,7 @@ Unit = function (rigidbody, faction) {
             distanceMultiplier = getDistance(this.m_target.m_rigidbody.m_transform, this.m_target.m_rigidbody.m_transform)/this.m_forceMultiplier;
 
             scale(forceDir,[distanceMultiplier, distanceMultiplier, distanceMultiplier], forceDir);
-
+            
             this.m_rigidbody.addForce(forceDir[0], forceDir[1], forceDir[2]);
         }
     }
