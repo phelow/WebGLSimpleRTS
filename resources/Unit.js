@@ -4,6 +4,8 @@ Unit = function (rigidbody, faction) {
     this.m_faction = faction;
     this.m_rigidbody = rigidbody;
     this.m_target = null;
+    this.m_forceMultiplier = 10.0;
+
     console.log("unit created, rigidbody:" + this.m_rigidbody);
 
     this.simpleAI = function () {
@@ -27,6 +29,12 @@ Unit = function (rigidbody, faction) {
             console.log(this.m_target.m_rigidbody.m_transform.pos + " " + this.m_rigidbody.m_transform.pos);
             var forceDir = vectorSubtract(this.m_target.m_rigidbody.m_transform.pos, this.m_rigidbody.m_transform.pos);
             console.log(forceDir);
+            forceDir = normalize(forceDir);
+
+            distanceMultiplier = getDistance(this.m_target.m_rigidbody.m_transform, this.m_target.m_rigidbody.m_transform)/this.m_forceMultiplier;
+
+            scale(forceDir,[distanceMultiplier, distanceMultiplier, distanceMultiplier], forceDir);
+
             this.m_rigidbody.addForce(forceDir[0], forceDir[1], forceDir[2]);
         }
     }

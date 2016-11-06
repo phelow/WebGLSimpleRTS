@@ -112,8 +112,6 @@ cross = function (a, b) { // [ a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a
 }
 var matrix;
 function setRotation() {
-
-
     var x = document.getElementById("xSlider").value * 360 / 100;
     var y = document.getElementById("ySlider").value * 360 / 100;
     var z = document.getElementById("zSlider").value * 360 / 100;
