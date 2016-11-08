@@ -12,10 +12,22 @@ var numEnemiesToSpawn = 1;
 var numFriendliesToSpawn = 1;
 var globalFriction = .7;
 
+var running = true;
+
 function makeNewCursor() {
-    cursor = new Rigidbody(new Transform(gl, 0, 0, 0), 1, globalFriction);
-    cursor.m_transform.scale([.1, .1, .1, .1]);
-    cursor.addRotationalForce([Math.randomRange(-.1, .1), Math.randomRange(-.1, .1), Math.randomRange(-.1, .1)]);
+	if(cursor != undefined){
+		//Temp solution - should destroy the cursor.
+		cursor.scale([0,0,0]);
+	}
+	var temp  = new GameObject();
+	temp.addComponents([
+		new Rigidbody(1,globalFriction),
+		new Transform(gl, 0, 0, 0)
+	]);
+
+    cursor = temp.getComponent("Transform");// new Rigidbody(new Transform(gl, 0, 0, 0), 1, globalFriction);
+    cursor.scale([.1, .1, .1]);
+    temp.getComponent("Rigidbody").addRotationalForce([Math.randomRange(-.1, .1), Math.randomRange(-.1, .1), Math.randomRange(-.1, .1)]);
 }
 function main() {
     //alert("Program starting");
@@ -46,22 +58,30 @@ function main() {
     var coneTranslation   = [ 40, 0, 0];
   */
     makeNewCursor();
-    obj = [];
-
-    enemyUnits = [];
+    //obj = [];
+	var globalMass = 1;
+    //enemyUnits = [];
     for (var i = 0; i < numEnemiesToSpawn; i++) {
-        var enemyUnit = new Unit(new Rigidbody(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0), 10000, globalFriction), "enemy");
-        enemyUnit.m_rigidbody.m_transform.scale([.2, .2, .2]);
-        enemyUnits.push(enemyUnit);
-        allUnits.push(enemyUnit);
+		var enemyUnit = new GameObject();
+		enemyUnit.addComponents([
+			new Unit("enemy"),
+			new Rigidbody(globalMass, globalFriction),
+			new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0)
+		])
+        enemyUnit.getComponent("Transform").scale([.2, .2, .2]);
+        //enemyUnits.push(enemyUnit);
+        //allUnits.push(enemyUnit);
     }
 
     playerUnits = [];
     for (var i = 0; i < numFriendliesToSpawn; i++) {
-        obj.push(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0));
+        //obj.push(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0));
+		var friend = new GameObject();
+		friend.addComponent(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0));
         //console.log(Math.randomRange(-1,1));
         //obj.push(new Transform(gl, -1.5,1.5,0));
-        obj[i].scale([.1, .1, .1]);
+		friend.getComponent("Transform").scale([.1,.1,.1]);
+//        obj[i].scale([.1, .1, .1]);
 
     }
 
@@ -74,13 +94,14 @@ function main() {
         time *= 0.0005;
 
         //update the rigidbodies
-        cursor.update();
-        for (var i = 0; i < allUnits.length; i++) {
+        //cursor.update();
+        /*for (var i = 0; i < allUnits.length; i++) {
             allUnits[i].simpleAI();
             allUnits[i].m_rigidbody.update();
-        }
+        }*/
+		
 
-        cursor.m_transform.scale([1.01, 1.01, 1.01]);
+        cursor.scale([1.01, 1.01, 1.01]);
 
         webglUtils.resizeCanvasToDisplaySize(gl.canvas);
         webglUtils.resizeCanvasToDisplaySize(ctx.canvas);
@@ -119,18 +140,22 @@ function main() {
         this.viewProjectionMatrix = m4.multiply(projectionMatrix, this.viewMatrix);
 
         // ------ Draw the objects --------
-
+/*
         for (var i = 0; i < obj.length; i++) {
             obj[i].draw(this.viewProjectionMatrix);
-        }
-
-
+        }*/
+		for(var i = 0; i < GameObjects.length; i++){
+			GameObjects[i].Update(this.viewProjectionMatrix)
+		}
+/*
         for (var i = 0; i < allUnits.length; i++) {
             allUnits[i].m_rigidbody.m_transform.draw(this.viewProjectionMatrix);
         }
-
-        cursor.m_transform.draw(this.viewProjectionMatrix);
-        requestAnimationFrame(drawScene);
+*/
+        //cursor.m_transform.Update(this.viewProjectionMatrix);
+		if(running){
+			requestAnimationFrame(drawScene);
+		}
     }
 
     function unproject(windowX, windowY, windowZ, out) {
@@ -260,17 +285,20 @@ function main() {
         var out2 = [out[0] * out[2] - 2.5, -out[1] * out[2] + 5, 1];
         //alert(out2);
 
-        cursor.m_transform.setPosition(out2);
+        cursor.setPosition(out2);
     }
 
 
     function handleMouseClick(event) {
-        var newUnit = new Unit(cursor, "player");
-
-        playerUnits.push(newUnit);
+		var newUnit = new GameObject();
+		newUnit.addComponents([
+			new Unit("player"),
+			new Rigidbody(globalMass, globalFriction),
+			Transform.clone(cursor)			
+		])
+        //playerUnits.push(newUnit);
         makeNewCursor();
 
-        allUnits.push(newUnit)
 
     }
 }
