@@ -59,13 +59,11 @@ cast = function (point, angle, range) {
 function RayCastCheckAll() {
 
     for (var i = 0; i < GameObjects.length; i++) {
-        for (var j = 0; j < GameObjects.length; j++) {
-            alert(GameObjects[i].getComponent("Transform"));
-            alert(GameObjects[j].getComponent("Transform"));
-
-            var angle = Math.atan2(GameObjects[i].getComponent("Transform").pos, dot(GameObjects[i].getComponent("Transform").pos, GameObjects[j].getComponent("Transform").pos));
-
-            var ray = cast(GameObjects[i], angle, 1);
+        for (var j = 0; i !=j && j < GameObjects.length; j++) {
+			var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
+			var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
+            var angle = Math.atan2(x, y);
+            var ray = cast(GameObjects[i], angle, 0);
         }
     }
 }
