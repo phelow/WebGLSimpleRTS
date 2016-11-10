@@ -40,7 +40,7 @@ cast = function (point, angle, range) {
     }
 
     function get(stepX, stepY) {
-        //TODO: pull thing here
+        //TODO: actually do the check here
         return 0;
     }
 
