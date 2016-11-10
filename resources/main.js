@@ -25,11 +25,11 @@ cast = function (point, angle, range) {
         var nextStep = stepX.length2 < stepY.length2
           ? inspect(stepX, 1, 0, origin.distance, stepX.y)
           : inspect(stepY, 0, 1, origin.distance, stepY.x);
+		  console.log(nextStep.distance + " "  + range);
         if (nextStep.distance > range) return [origin];
         return [origin].concat(ray(nextStep));
     }
     function step(rise, run, x, y, inverted) {
-        if (run === 0) return noWall;
         var dx = run > 0 ? Math.floor(x + 1) - x : Math.ceil(x - 1) - x;
         var dy = dx * (rise / run);
         return {
@@ -49,6 +49,7 @@ cast = function (point, angle, range) {
         var dy = sin < 0 ? shiftY : 0;
         step.height = get(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length2);
+		console.log("step.distance:" + step.distance + " distance:" + distance + " step.length2:" + step.length2);
         if (shiftX) step.shading = cos < 0 ? 2 : 0;
         else step.shading = sin < 0 ? 2 : 1;
         step.offset = offset - Math.floor(offset);
@@ -63,7 +64,10 @@ function RayCastCheckAll() {
 			var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
 			var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
             var angle = Math.atan2(x, y);
-            var ray = cast(GameObjects[i], angle, 0);
+			var point = function point(){};
+			point.x = GameObjects[i].getComponent("Transform").pos[0];
+			point.y = GameObjects[i].getComponent("Transform").pos[1];
+            var ray = cast(point, angle, 1);
         }
     }
 }
