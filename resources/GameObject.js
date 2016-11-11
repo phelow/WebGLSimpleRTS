@@ -59,7 +59,12 @@ GameObject = function () {
 				return this.components[i];
 			}
 		}
+		console.error("Component " + name + " not found");
 		return {};
 	}
 	
+}
+
+GameObject.Destroy = function(Obj){
+	GameObjects.splice(GameObjects.findIndex((x)=>x===Obj),1);
 }

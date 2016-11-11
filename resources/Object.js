@@ -3,7 +3,7 @@ Array.prototype.y = function(){return this[1];}
 Array.prototype.z = function(){return this[2];}
 Transform = function (gl, x, y, z) {
     this.program = webglUtils.createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);;
-    this.buffer = createFlattenedVertices(gl, primitives.createCubeVertices(20));;
+    this.buffer = createFlattenedVertices(gl, primitives.createCubeVertices(1));;
     this.uniforms = {};
     this.uniforms.u_matrix = m4.identity();/*[x,0,0,0,
 								0,y,0,0,
@@ -37,6 +37,7 @@ Transform = function (gl, x, y, z) {
     this.scale = function (s) {
         if (s.length != 3) {
             console.warn("Error, scale argument should have length 3.");
+			console.warn(s);
         }
 		Transform.checkNull(s);
         for (var i = 0; i < this.sc.length; i++) {
@@ -47,6 +48,7 @@ Transform = function (gl, x, y, z) {
     this.rotate = function (s) {
         if (s.length != 3) {
             console.warn("Error, rotation argument should have length 3.");
+			console.warn(s);
         }
 		Transform.checkNull(s);
         for (var i = 0; i < this.rot.length; i++) {
@@ -56,6 +58,7 @@ Transform = function (gl, x, y, z) {
     this.setPosition = function (s) {
         if (s.length != 3) {
             console.warn("Error, translation argument should have length 3.");
+			console.warn(s);
         }
 		Transform.checkNull(s);
         for (var i = 0; i < this.pos.length; i++) {
@@ -65,6 +68,7 @@ Transform = function (gl, x, y, z) {
     this.translate = function (s) {
         if (s.length != 3) {
             console.warn("Error, translation argument should have length 3.");
+			console.warn(s);
         }
 		Transform.checkNull(s);
         for (var i = 0; i < this.pos.length; i++) {
@@ -122,7 +126,10 @@ function computeMatrix(viewProjectionMatrix, translation, rotation, scale) {
         translation[0],
         translation[1],
         translation[2]);
-    matrix = m4.scale(matrix, scale[0], scale[1], scale[2])
     matrix = m4.xRotate(matrix, rotation[0]);
-    return m4.zRotate(m4.yRotate(matrix, rotation[1]), rotation[2]);
+	matrix = m4.yRotate(matrix, rotation[1]);
+	matrix = m4.zRotate(matrix, rotation[2]);
+	
+    matrix = m4.scale(matrix, scale[0], scale[1], scale[2])
+    return matrix;
 }

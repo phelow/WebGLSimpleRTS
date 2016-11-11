@@ -613,6 +613,14 @@ function scale( s, u )
     return result;
 }
 
+
+function magnitude(v){
+	var total = 0;
+	for(var i = 0; i < v.length; i++){
+		total += v[i]*v[i];
+	}
+	return Math.sqrt(total);
+}
 //----------------------------------------------------------------------------
 //
 //

@@ -25,7 +25,7 @@ cast = function (point, angle, range) {
         var nextStep = stepX.length2 < stepY.length2
           ? inspect(stepX, 1, 0, origin.distance, stepX.y)
           : inspect(stepY, 0, 1, origin.distance, stepY.x);
-		  console.log(nextStep.distance + " "  + range);
+		  //console.log(nextStep.distance + " "  + range);
         if (nextStep.distance > range) return [origin];
         return [origin].concat(ray(nextStep));
     }
@@ -49,7 +49,7 @@ cast = function (point, angle, range) {
         var dy = sin < 0 ? shiftY : 0;
         step.height = get(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length2);
-		console.log("step.distance:" + step.distance + " distance:" + distance + " step.length2:" + step.length2);
+		//console.log("step.distance:" + step.distance + " distance:" + distance + " step.length2:" + step.length2);
         if (shiftX) step.shading = cos < 0 ? 2 : 0;
         else step.shading = sin < 0 ? 2 : 1;
         step.offset = offset - Math.floor(offset);
@@ -84,7 +84,7 @@ function makeNewCursor() {
     ]);
 
     cursor = temp.getComponent("Transform");// new Rigidbody(new Transform(gl, 0, 0, 0), 1, globalFriction);
-    cursor.scale([.1, .1, .1]);
+    cursor.scale([1, 1, 1]);
     temp.getComponent("Rigidbody").addRotationalForce([Math.randomRange(-.1, .1), Math.randomRange(-.1, .1), Math.randomRange(-.1, .1)]);
 }
 function main() {
@@ -126,7 +126,7 @@ function main() {
             new Rigidbody(globalMass, globalFriction),
             new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0)
         ])
-        enemyUnit.getComponent("Transform").scale([.2, .2, .2]);
+        enemyUnit.getComponent("Transform").scale([5,5,5]);
         //enemyUnits.push(enemyUnit);
         //allUnits.push(enemyUnit);
     }
@@ -138,7 +138,7 @@ function main() {
         friend.addComponent(new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0));
         //console.log(Math.randomRange(-1,1));
         //obj.push(new Transform(gl, -1.5,1.5,0));
-        friend.getComponent("Transform").scale([.1, .1, .1]);
+        friend.getComponent("Transform").scale([4, 4, 4]);
         //        obj[i].scale([.1, .1, .1]);
 
     }
@@ -157,7 +157,10 @@ function main() {
             allUnits[i].simpleAI();
             allUnits[i].m_rigidbody.update();
         }*/
-
+		if(Math.random() > .99){
+			console.log("Placing line");
+			LineRenderer.Spawn([Math.randomRange(-50,50),Math.randomRange(-50,50)],[Math.randomRange(-50,50),Math.randomRange(-50,50)],1000);
+		}
 
         cursor.scale([1.01, 1.01, 1.01]);
 
@@ -205,7 +208,7 @@ function main() {
         for (var i = 0; i < GameObjects.length; i++) {
             GameObjects[i].Update(this.viewProjectionMatrix)
         }
-        RayCastCheckAll();
+        //RayCastCheckAll();
         /*
                 for (var i = 0; i < allUnits.length; i++) {
                     allUnits[i].m_rigidbody.m_transform.draw(this.viewProjectionMatrix);
