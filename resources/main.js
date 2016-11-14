@@ -25,7 +25,11 @@ cast = function (point, angle, range) {
         var nextStep = stepX.length2 < stepY.length2
           ? inspect(stepX, 1, 0, origin.distance, stepX.y)
           : inspect(stepY, 0, 1, origin.distance, stepY.x);
-		  //console.log(nextStep.distance + " "  + range);
+        //console.log(nextStep.distance + " "  + range);
+        if (typeof (step.gameObject) != 'undefined') {
+            console.log(step.gameObject);
+            return step.gameObject;
+        }
         if (nextStep.distance > range) return [origin];
         return [origin].concat(ray(nextStep));
     }
@@ -41,17 +45,21 @@ cast = function (point, angle, range) {
 
     function get(stepX, stepY) {
         //TODO: actually do the check here
-        return 0;
+
+        for (var i = 0; i < GameObjects.length; i++) {
+            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < .1) {
+                return GameObjects[i];
+            }
+        }
+
+        return null;
     }
 
     function inspect(step, shiftX, shiftY, distance, offset) {
         var dx = cos < 0 ? shiftX : 0;
         var dy = sin < 0 ? shiftY : 0;
-        step.height = get(step.x - dx, step.y - dy);
+        step.gameObject = get(step.x - dx, step.y - dy);
         step.distance = distance + Math.sqrt(step.length2);
-		//console.log("step.distance:" + step.distance + " distance:" + distance + " step.length2:" + step.length2);
-        if (shiftX) step.shading = cos < 0 ? 2 : 0;
-        else step.shading = sin < 0 ? 2 : 1;
         step.offset = offset - Math.floor(offset);
         return step;
     }
@@ -67,7 +75,9 @@ function RayCastCheckAll() {
 			var point = function point(){};
 			point.x = GameObjects[i].getComponent("Transform").pos[0];
 			point.y = GameObjects[i].getComponent("Transform").pos[1];
-            var ray = cast(point, angle, 1);
+			var ray = cast(point, angle, 1);
+
+			console.log(ray);
         }
     }
 }
@@ -208,7 +218,7 @@ function main() {
         for (var i = 0; i < GameObjects.length; i++) {
             GameObjects[i].Update(this.viewProjectionMatrix)
         }
-        //RayCastCheckAll();
+        RayCastCheckAll();
         /*
                 for (var i = 0; i < allUnits.length; i++) {
                     allUnits[i].m_rigidbody.m_transform.draw(this.viewProjectionMatrix);
