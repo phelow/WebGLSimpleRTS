@@ -34,7 +34,7 @@ var LineRenderer = function(start,end,durationFrames){//vector2, vector2, int
 LineRenderer.angle = function(start,end){
 	var vector = subtract(start,end);
 	var angle = Math.atan2(vector.y(),vector.x());
-	console.log(angle);
+	//console.log(angle);
 	return angle;
 }
 

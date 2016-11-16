@@ -25,13 +25,17 @@ cast = function (point, angle, range) {
         var nextStep = stepX.length2 < stepY.length2
           ? inspect(stepX, 1, 0, origin.distance, stepX.y)
           : inspect(stepY, 0, 1, origin.distance, stepY.x);
-        //console.log(nextStep.distance + " "  + range);
-        if (typeof (step.gameObject) != 'undefined') {
-            console.log(step.gameObject);
-            return step.gameObject;
+        console.log(nextStep.distance + " "  + range + nextStep.gameObject);
+        if (nextStep.gameObject != null) {
+            console.log(nextStep.gameObject);
+            return nextStep.gameObject;
         }
-        if (nextStep.distance > range) return [origin];
-        return [origin].concat(ray(nextStep));
+
+
+        if (nextStep.distance > range) {
+            return null;
+        }
+        return ray(nextStep);
     }
     function step(rise, run, x, y, inverted) {
         var dx = run > 0 ? Math.floor(x + 1) - x : Math.ceil(x - 1) - x;
@@ -45,9 +49,8 @@ cast = function (point, angle, range) {
 
     function get(stepX, stepY) {
         //TODO: actually do the check here
-
         for (var i = 0; i < GameObjects.length; i++) {
-            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < .1) {
+            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < 1.0) {
                 return GameObjects[i];
             }
         }
@@ -75,9 +78,15 @@ function RayCastCheckAll() {
 			var point = function point(){};
 			point.x = GameObjects[i].getComponent("Transform").pos[0];
 			point.y = GameObjects[i].getComponent("Transform").pos[1];
-			var ray = cast(point, angle, 1);
+			var ray = cast(point, angle, 1000);
 
-			console.log(ray);
+			if (ray != null) {
+			    console.log(ray);
+			}
+
+			//LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 1000)
+
+			//console.log(ray);
         }
     }
 }
@@ -168,7 +177,7 @@ function main() {
             allUnits[i].m_rigidbody.update();
         }*/
 		if(Math.random() > .99){
-			console.log("Placing line");
+			//console.log("Placing line");
 			LineRenderer.Spawn([Math.randomRange(-50,50),Math.randomRange(-50,50)],[Math.randomRange(-50,50),Math.randomRange(-50,50)],1000);
 		}
 
