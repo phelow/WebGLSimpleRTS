@@ -50,7 +50,7 @@ cast = function (point, angle, range, ignoreThisGameObject) {
     function get(stepX, stepY) {
         //TODO: actually do the check here
         for (var i = 0; i < GameObjects.length; i++) {
-            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < 100.0 && GameObjects[i] != ignoreThisGameObject) {
+            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < 1.0 && GameObjects[i] != ignoreThisGameObject) {
                 return GameObjects[i];
             }
         }
@@ -84,8 +84,9 @@ function RayCastCheckAll() {
                 
 
                 if (Math.random() > .99) {
+
                     console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
-                    LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 1000)
+                    LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 10)
                 }
             }
 
