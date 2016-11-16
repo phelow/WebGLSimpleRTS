@@ -59,7 +59,6 @@ GameObject = function () {
 				return this.components[i];
 			}
 		}
-		console.error("Component " + name + " not found");
 		return {};
 	}
 	

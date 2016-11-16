@@ -11,6 +11,14 @@ Unit = function (faction) {
 		this.t = this.GameObject.getComponent("Transform");
 		allUnits.push(this.GameObject);
 	}
+	this.TakeDamage = function (amount) {
+	    this.t.sc = vectorSubtract(this.t.sc, [amount, amount, amount]);
+
+	    if (this.t.sc[0] < 0) {
+	        GameObjects.remove(this.GameObject);
+	    }
+	}
+
     this.Update = function () {
         //TODO: implement basic following ai
         //pick a target

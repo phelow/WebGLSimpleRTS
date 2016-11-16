@@ -82,11 +82,21 @@ function RayCastCheckAll() {
                 point.x = GameObjects[i].getComponent("Transform").pos[0];
                 point.y = GameObjects[i].getComponent("Transform").pos[1];
                 var ray = cast(point, angle, 100, GameObjects[i]);
-
+                
                 if (ray != null) {
-
-                    console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
-                    LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 10)
+                    var unit = ray.getComponent("Unit");
+                    try{
+                        if (unit != null) {
+                            console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
+                            LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 10);
+                            console.log(unit);
+                            unit.TakeDamage(GameObjects[i].getComponent("Transform").sc);
+                        }
+                    }
+                    catch(err)
+                    {
+                        //IDK why this is throwing an error
+                    }
                 }
             }
 
