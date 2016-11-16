@@ -13,7 +13,7 @@ var numFriendliesToSpawn = 1;
 var globalFriction = .7;
 
 var running = true;
-cast = function (point, angle, range) {
+cast = function (point, angle, range, ignoreThisGameObject) {
     var self = this;
     var sin = Math.sin(angle);
     var cos = Math.cos(angle);
@@ -25,9 +25,9 @@ cast = function (point, angle, range) {
         var nextStep = stepX.length2 < stepY.length2
           ? inspect(stepX, 1, 0, origin.distance, stepX.y)
           : inspect(stepY, 0, 1, origin.distance, stepY.x);
-        console.log(nextStep.distance + " "  + range + nextStep.gameObject);
+        //console.log(nextStep.distance + " "  + range + nextStep.gameObject);
         if (nextStep.gameObject != null) {
-            console.log(nextStep.gameObject);
+            //console.log(nextStep.gameObject);
             return nextStep.gameObject;
         }
 
@@ -50,7 +50,7 @@ cast = function (point, angle, range) {
     function get(stepX, stepY) {
         //TODO: actually do the check here
         for (var i = 0; i < GameObjects.length; i++) {
-            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < 1.0) {
+            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < 100.0 && GameObjects[i] != ignoreThisGameObject) {
                 return GameObjects[i];
             }
         }
@@ -71,22 +71,25 @@ cast = function (point, angle, range) {
 function RayCastCheckAll() {
 
     for (var i = 0; i < GameObjects.length; i++) {
-        for (var j = 0; i !=j && j < GameObjects.length; j++) {
-			var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
-			var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
+        for (var j = 0; i != j && j < GameObjects.length; j++) {
+            var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
+            var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
             var angle = Math.atan2(x, y);
-			var point = function point(){};
-			point.x = GameObjects[i].getComponent("Transform").pos[0];
-			point.y = GameObjects[i].getComponent("Transform").pos[1];
-			var ray = cast(point, angle, 1000);
+            var point = function point() { };
+            point.x = GameObjects[i].getComponent("Transform").pos[0];
+            point.y = GameObjects[i].getComponent("Transform").pos[1];
+            var ray = cast(point, angle, 1000, GameObjects[i]);
 
-			if (ray != null) {
-			    console.log(ray);
-			}
+            if (ray != null) {
+                
 
-			//LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 1000)
+                if (Math.random() > .99) {
+                    console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
+                    LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 1000)
+                }
+            }
 
-			//console.log(ray);
+            //console.log(ray);
         }
     }
 }
@@ -145,7 +148,7 @@ function main() {
             new Rigidbody(globalMass, globalFriction),
             new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0)
         ])
-        enemyUnit.getComponent("Transform").scale([5,5,5]);
+        enemyUnit.getComponent("Transform").scale([5, 5, 5]);
         //enemyUnits.push(enemyUnit);
         //allUnits.push(enemyUnit);
     }
@@ -176,10 +179,10 @@ function main() {
             allUnits[i].simpleAI();
             allUnits[i].m_rigidbody.update();
         }*/
-		if(Math.random() > .99){
-			//console.log("Placing line");
-			LineRenderer.Spawn([Math.randomRange(-50,50),Math.randomRange(-50,50)],[Math.randomRange(-50,50),Math.randomRange(-50,50)],1000);
-		}
+        if (Math.random() > .99) {
+            //console.log("Placing line");
+            //LineRenderer.Spawn([Math.randomRange(-50, 50), Math.randomRange(-50, 50)], [Math.randomRange(-50, 50), Math.randomRange(-50, 50)], 1000);
+        }
 
         cursor.scale([1.01, 1.01, 1.01]);
 
