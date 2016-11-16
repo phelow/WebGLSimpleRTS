@@ -74,18 +74,18 @@ function RayCastCheckAll() {
         for (var j = 0; i != j && j < GameObjects.length; j++) {
 
 
-            if (Math.random() > .99) {
+            if (Math.random() > .999) {
                 var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
                 var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
                 var angle = Math.atan2(x, y);
                 var point = function point() { };
                 point.x = GameObjects[i].getComponent("Transform").pos[0];
                 point.y = GameObjects[i].getComponent("Transform").pos[1];
-                var ray = cast(point, angle, 1000, GameObjects[i]);
+                var ray = cast(point, angle, 100, GameObjects[i]);
 
                 if (ray != null) {
 
-                    //console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
+                    console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
                     LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 10)
                 }
             }
