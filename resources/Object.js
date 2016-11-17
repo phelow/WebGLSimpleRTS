@@ -118,7 +118,7 @@ getDistance = function (transformA, transformB) {
 }
 */
 getDistance = function (transformA, transformB) {
-    return Math.sqrt(Math.pow(transformA.pos[0] + transformB.pos[0], 2) + Math.pow(transformA.pos[1] + transformB.pos[1], 2));
+    return Math.sqrt(Math.pow(transformA.pos[0] - transformB.pos[0], 2) + Math.pow(transformA.pos[1] - transformB.pos[1], 2));
 }
 
 function computeMatrix(viewProjectionMatrix, translation, rotation, scale) {

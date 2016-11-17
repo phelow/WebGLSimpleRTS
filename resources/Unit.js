@@ -45,8 +45,10 @@ Unit = function (faction) {
 				console.warn ("forceDir is nan");
 				forceDir = [0,0,0];
 			}
-            distanceMultiplier = getDistance(this.m_target, this.t);
-            forceDir = scale(distanceMultiplier,forceDir);
+			distanceMultiplier = getDistance(this.m_target, this.t);
+			forceDir = scale(distanceMultiplier, forceDir);
+			console.log("distance:" + distanceMultiplier);
+			console.log(forceDir);
             forceDir = scale(this.m_forceMultiplier,forceDir );
             this.m_rigidbody.addForce(forceDir[0], forceDir[1], forceDir[2]);
         }
