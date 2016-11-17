@@ -29,15 +29,20 @@ Unit = function (faction) {
                 if (potentialUnit.m_faction == this.m_faction) {
                     continue;
                 }
+
+                var potentialTransform = potentialTarget.getComponent("Transform");
+
+
                 if (this.m_target == null) {
                     this.m_target = potentialTarget.getComponent("Transform");
+
                 }
-                else if (getDistance(this.m_target, this.t) < getDistance(potentialTarget.getComponent("Transform"), this.t)) {
+                else if (potentialTransform.pos != null && this.m_target.pos != null && getDistance(this.m_target, this.t) < getDistance(potentialTransform, this.t)) {
                     this.m_target = potentialTarget;
                 }
             }
         }
-        if (this.m_target != null) { //TODO: fix the bug where we're getting a vector to the origin.
+        if (this.m_target != null && this.m_target.pos != null) { //TODO: fix the bug where we're getting a vector to the origin.
             var forceDir = vectorSubtract(this.m_target.pos, this.t.pos);
 			
             forceDir = normalize(forceDir);

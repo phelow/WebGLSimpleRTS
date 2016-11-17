@@ -8,8 +8,8 @@ var cursor;
 var obj;
 var playerUnits;
 var gl;
-var numEnemiesToSpawn = 1;
-var numFriendliesToSpawn = 1;
+var numEnemiesToSpawn = 5;
+var numFriendliesToSpawn = 5;
 var globalFriction = .7;
 
 var running = true;
@@ -72,9 +72,10 @@ function RayCastCheckAll() {
 
     for (var i = 0; i < GameObjects.length; i++) {
         for (var j = 0; i != j && j < GameObjects.length; j++) {
+            var UnitA = GameObjects[i].getComponent("Unit");
+            var UnitB = GameObjects[j].getComponent("Unit");
 
-
-            if (Math.random() > .999) {
+            if (Math.random() > .999 && UnitA != null && UnitB != null && UnitA.m_faction != UnitB.m_faction) {
                 var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
                 var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
                 var angle = Math.atan2(x, y);
@@ -175,6 +176,8 @@ function main() {
         //        obj[i].scale([.1, .1, .1]);
 
     }
+
+
 
     requestAnimationFrame(drawScene);
     document.onmousemove = handleMouseMove;
