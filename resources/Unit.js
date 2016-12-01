@@ -1,9 +1,10 @@
 //var allUnits = [];
 
-Unit = function (faction) {
+Unit = function (faction, GameObject) {
     this.m_faction = faction;
     //this.m_rigidbody = rigidbody;
     this.m_target = null;//TYPE: Transform
+    this.GameObject = GameObject;
     this.m_targetGameObject = null;
     this.m_forceMultiplier = .001;
     this.Name = "Unit";

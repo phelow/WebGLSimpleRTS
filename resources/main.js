@@ -156,7 +156,7 @@ function main() {
     for (var i = 0; i < numEnemiesToSpawn; i++) {
         var enemyUnit = new GameObject();
         enemyUnit.addComponents([
-            new Unit("enemy"),
+            new Unit("enemy",enemyUnit),
             new Rigidbody(globalMass, globalFriction),
             new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0)
         ])
@@ -390,7 +390,7 @@ function main() {
     function handleMouseClick(event) {
         var newUnit = new GameObject();
         newUnit.addComponents([
-            new Unit("player"),
+            new Unit("player",newUnit),
             new Rigidbody(globalMass, globalFriction),
             Transform.clone(cursor)
         ])
