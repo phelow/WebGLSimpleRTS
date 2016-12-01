@@ -69,7 +69,6 @@ cast = function (point, angle, range, ignoreThisGameObject) {
 };
 
 function RayCastCheckAll() {
-
     for (var i = 0; i < GameObjects.length; i++) {
         for (var j = 0; i != j && j < GameObjects.length; j++) {
             var UnitA = GameObjects[i].getComponent("Unit");
@@ -92,7 +91,6 @@ function RayCastCheckAll() {
                         console.log(point.x + " " + point.y + " to " + ray.getComponent("Transform").pos[0] + " " + ray.getComponent("Transform").pos[1]);
                         LineRenderer.Spawn([point.x, point.y], [ray.getComponent("Transform").pos[0], ray.getComponent("Transform").pos[1]], 10);
                         console.log(unit);
-                        console.log("94");
                         unit.TakeDamage(GameObjects[i].getComponent("Transform").sc[0]);
                     }
                 }
@@ -147,6 +145,18 @@ function main() {
     var coneTranslation   = [ 40, 0, 0];
   */
     makeNewCursor();
+
+
+    for (var i = 0; i < numEnemiesToSpawn; i++) {
+        var cover = new GameObject();
+        cover.addComponents([
+            new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0)
+        ])
+        cover.getComponent("Transform").scale([Math.randomRange(1, 10), Math.randomRange(1, 10), Math.randomRange(1, 10)]);
+        //enemyUnits.push(enemyUnit);
+        //allUnits.push(enemyUnit);
+    }
+
     //obj = [];
     var globalMass = 1;
     //enemyUnits = [];
