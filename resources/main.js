@@ -50,7 +50,7 @@ cast = function (point, angle, range, ignoreThisGameObject) {
     function get(stepX, stepY) {
         //TODO: actually do the check here
         for (var i = 0; i < GameObjects.length; i++) {
-            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < 1.0 && GameObjects[i] != ignoreThisGameObject) {
+            if (Math.sqrt(Math.pow(GameObjects[i].getComponent("Transform").pos[0] - stepX, 2) + Math.pow(GameObjects[i].getComponent("Transform").pos[1] - stepY, 2)) < .1 && GameObjects[i] != ignoreThisGameObject) {
                 return GameObjects[i];
             }
         }
@@ -74,7 +74,7 @@ function RayCastCheckAll() {
             var UnitA = GameObjects[i].getComponent("Unit");
             var UnitB = GameObjects[j].getComponent("Unit");
 
-            if (Math.random() > .999 && UnitA != null && UnitB != null && UnitA.m_faction != UnitB.m_faction) {
+            if ( UnitA != null && UnitB != null && UnitA.m_faction != UnitB.m_faction) {
                 var x = GameObjects[i].getComponent("Transform").pos[0] - GameObjects[j].getComponent("Transform").pos[0];
                 var y = GameObjects[i].getComponent("Transform").pos[1] - GameObjects[j].getComponent("Transform").pos[1];
                 var angle = Math.atan2(x, y);
@@ -147,7 +147,7 @@ function main() {
     makeNewCursor();
 
 
-    for (var i = 0; i < numEnemiesToSpawn; i++) {
+    for (var i = 0; i < numEnemiesToSpawn/4; i++) {
         var cover = new GameObject();
         cover.addComponents([
             new Transform(gl, Math.randomRange(-30, 30), Math.randomRange(-30, 30), 0)
