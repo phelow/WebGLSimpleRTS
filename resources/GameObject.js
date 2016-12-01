@@ -59,7 +59,7 @@ GameObject = function () {
 				return this.components[i];
 			}
 		}
-		return {};
+		return null;
 	}
 	
 }

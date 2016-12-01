@@ -16,11 +16,24 @@ Unit = function (faction, GameObject) {
 	}
 	this.TakeDamage = function (amount) {
 	    amount = amount / 10;
-	    this.GameObject.getComponent("Transform").scale(vectorSubtract(this.GameObject.getComponent("Transform").sc, [amount, amount, amount]));
+	    console.log("19");
 
+	    if (this.GameObject.getComponent("Transform").sc == null) {
+	        alert("There is no transform");
+	    }
+
+	    this.GameObject.getComponent("Transform").scale(vectorSubtract(this.GameObject.getComponent("Transform").sc, [amount, amount, amount]));
+        
 	    if (this.GameObject.getComponent("Transform").sc[0] < 1 || isNaN(this.GameObject.getComponent("Transform").sc[0])) {
-	        GameObjects.remove(this.GameObject);
+	        console.log("DEAD: this.GameObject.getComponent(Transform).sc[0] :" + this.GameObject.getComponent("Transform").sc[0]);
+	        var index = GameObjects.indexOf(this.GameObject);
+	        if (index != -1)
+	            GameObjects.splice(index, 1);
 	        this.dead = true;
+	        alert(this.dead);
+	    }
+	    else {
+	        console.log("this.GameObject.getComponent(Transform).sc[0] :" + this.GameObject.getComponent("Transform").sc[0] );
 	    }
 
 	}
@@ -30,6 +43,7 @@ Unit = function (faction, GameObject) {
         //pick a target
 
         if (this.m_targetGameObject != null && this.m_targetGameObject.dead == true) {
+            alert("The thing is dead");
             this.m_target == null;
         }
 
@@ -54,9 +68,6 @@ Unit = function (faction, GameObject) {
             }
 
         }
-        console.log("Update");
-        console.log(this.m_target);
-        console.log(this.m_target.pos);
         if (this.m_target != null && this.m_target.pos != null) { //TODO: fix the bug where we're getting a vector to the origin.
             console.log("Applying force");
             var forceDir = vectorSubtract(this.m_target.pos, this.t.pos);
