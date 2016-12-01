@@ -4,8 +4,10 @@ Unit = function (faction) {
     this.m_faction = faction;
     //this.m_rigidbody = rigidbody;
     this.m_target = null;//TYPE: Transform
+    this.m_targetGameObject = null;
     this.m_forceMultiplier = .001;
-	this.Name ="Unit";
+    this.Name = "Unit";
+    this.dead = false;
 	this.Start = function(){
 		this.m_rigidbody = this.GameObject.getComponent("Rigidbody");
 		this.t = this.GameObject.getComponent("Transform");
@@ -13,10 +15,11 @@ Unit = function (faction) {
 	}
 	this.TakeDamage = function (amount) {
 	    amount = amount / 10;
-	    this.t.sc = vectorSubtract(this.t.sc, [amount, amount, amount]);
+	    this.GameObject.getComponent("Transform").scale(vectorSubtract(this.GameObject.getComponent("Transform").sc, [amount, amount, amount]));
 
-	    if (this.t.sc[0] < 0) {
+	    if (this.GameObject.getComponent("Transform").sc[0] < 1 || isNaN(this.GameObject.getComponent("Transform").sc[0])) {
 	        GameObjects.remove(this.GameObject);
+	        this.dead = true;
 	    }
 
 	}
@@ -24,6 +27,11 @@ Unit = function (faction) {
     this.Update = function () {
         //TODO: implement basic following ai
         //pick a target
+
+        if (this.m_targetGameObject != null && this.m_targetGameObject.dead == true) {
+            this.m_target == null;
+        }
+
         if (this.m_target == null) {
             for(var potentialTarget of GameObjects) {
                 var potentialUnit = potentialTarget.getComponent("Unit");
@@ -40,6 +48,7 @@ Unit = function (faction) {
 
                 if (this.m_target == null || (potentialTransform.pos != null && this.m_target.pos != null && getDistance(this.m_target, this.t) < getDistance(potentialTransform, this.t))) {
                     this.m_target = potentialTransform;
+                    this.m_targetGameObject = potentialUnit;
                 }
             }
 
