@@ -23,10 +23,6 @@ var LineRenderer = function(start,end,durationFrames){//vector2, vector2, int
 			//this.GameObject.getComponent("Transform").scale([0,0,0]);
 		}
 	}
-	
-	
-	
-
 }
 
 
@@ -41,7 +37,7 @@ LineRenderer.angle = function(start,end){
 LineRenderer.Spawn = function(start,end,durationFrames){
 	var go = new GameObject();
 	go.addComponents([
-		new Transform(gl,0,0,0),
+		new Transform(gl,0,0,0,Transform.presets.solidColor([1,.5,.5,1])),
 		new LineRenderer(start,end,durationFrames)
-	])	
+	])
 }

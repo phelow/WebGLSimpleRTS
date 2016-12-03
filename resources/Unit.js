@@ -16,7 +16,7 @@ Unit = function (faction, GameObject) {
 	}
 	this.TakeDamage = function (amount) {
 	    amount = amount / 10;
-	    console.log("19");
+	    //console.log("19");
         
 	    this.GameObject.getComponent("Transform").scale(vectorSubtract(this.GameObject.getComponent("Transform").sc, [amount, amount, amount]));
         
@@ -63,7 +63,7 @@ Unit = function (faction, GameObject) {
 
         }
         if (this.m_target != null && this.m_target.pos != null) { //TODO: fix the bug where we're getting a vector to the origin.
-            console.log("Applying force");
+            //console.log("Applying force");
             var forceDir = vectorSubtract(this.m_target.pos, this.t.pos);
             forceDir = normalize(forceDir);
             if (isNaN(forceDir[0])) {
@@ -72,8 +72,8 @@ Unit = function (faction, GameObject) {
             }
             distanceMultiplier = getDistance(this.m_target, this.t);
             forceDir = scale(distanceMultiplier, forceDir);
-            console.log("distance:" + distanceMultiplier);
-            console.log(forceDir);
+            //console.log("distance:" + distanceMultiplier);
+            //console.log(forceDir);
             forceDir = scale(this.m_forceMultiplier, forceDir);
             this.m_rigidbody.addForce(forceDir[0], forceDir[1], forceDir[2]);
         }

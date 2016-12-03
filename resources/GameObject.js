@@ -6,11 +6,13 @@ basic component:
 {
 	
 	//YOU MUST SUPPLY IN YOUR CONSTRUCTOR:
-	Name:
+	Name
 	//Automatically set:
-	Update:
-	Start:
-	GameObject:
+	GameObject
+	
+	Called by this class: 
+	Update
+	Start
 	
 }
 */

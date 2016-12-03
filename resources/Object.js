@@ -1,10 +1,17 @@
 Array.prototype.x = function(){return this[0];}
 Array.prototype.y = function(){return this[1];}
 Array.prototype.z = function(){return this[2];}
-Transform = function (gl, x, y, z) {
-    this.program = webglUtils.createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]);;
-    this.buffer = createFlattenedVertices(gl, primitives.createCubeVertices(1));;
-    this.uniforms = {};
+Transform = function (gl, x, y, z,custom) {
+    if(custom === undefined){
+		custom = {};
+	}
+	//if(custom.program === undefined){
+	this.program = (custom.program === undefined) ? webglUtils.createProgramInfo(gl, ["3d-vertex-shader", "3d-fragment-shader"]) : custom.program;
+	//}else{
+	//	this.program = program;
+	//}
+    this.buffer = (custom.buffer === undefined) ? createFlattenedVertices(gl, primitives.createCubeVertices(1)) : custom.buffer;
+    this.uniforms = (custom.uniforms === undefined) ? {} : custom.uniforms;
     this.uniforms.u_matrix = m4.identity();/*[x,0,0,0,
 								0,y,0,0,
 								0,0,z,0,
@@ -94,6 +101,16 @@ Transform.checkNull = function(vec){
 		}
 	}
 }
+
+Transform.presets = {
+	solidColor : function(color){
+		var obj = {};
+		obj.program = webglUtils.createProgramInfo(gl, ["SolidColorVertex", "SolidColorFragment"]);
+		obj.uniforms = {u_color:color};
+		return obj;
+	}
+}
+
 var vectorSubtract = function (vectorA, vectorB) {
     var vectorC = [Math.min(vectorA[0] - vectorB[0],0), Math.min( vectorA[1] - vectorB[1],0), Math.min( vectorA[2] - vectorB[2],0)];
     return vectorC;
